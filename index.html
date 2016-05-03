@@ -142,8 +142,8 @@ angular.module('myApp.AppControllers', [])
      * Application Controller
      *
      */
-    .controller('ApplicationController',['$rootScope', '$scope', '$log', 'localStorageService',
-        function ($rootScope, $scope, $log, localStorageService)
+    .controller('ApplicationController',['$rootScope', '$scope', '$log', 'localStorageService', '$interval', '$timeout',
+        function ($rootScope, $scope, $log, localStorageService, $interval, $timeout)
         {
             // Load clients from local storage
             var clientsInStore = localStorageService.get('clients');
@@ -184,6 +184,7 @@ angular.module('myApp.AppControllers', [])
 
             // Save clients to local storage whenever a change happen
             $scope.$watch('clients', function () {
+                //console.log('local storage save');
                 localStorageService.set('clients', $scope.clients);
             }, true);
 
@@ -197,6 +198,13 @@ angular.module('myApp.AppControllers', [])
             $scope.timeprice = function(start){
                 return Math.round(moment(new Date()).diff(moment(start), 'hours', true) * $scope.price_hour * 100) / 100;
             };
+
+            // refresh view every 5 seconds
+            $scope.Timer = $interval(function () {
+                $timeout(function() {
+                    $scope.$apply();
+                }, 0);
+            }, 5000);
         }
     ]);
 
