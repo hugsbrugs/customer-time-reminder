@@ -98,11 +98,23 @@
             <!-- <pre>{{clients | json}}</pre> -->
         </div>
         <div class="col-sm-2">
-            <label for="prix_horaire">Prix horaire :</label>
+            <label for="prix_horaire_1">Prix 1ère heure :</label>
             <div class="input-group">
                 <input
                 type="number"
-                ng-model="price_hour"
+                name="prix_horaire_1"
+                ng-model="price_hour_1"
+                class="form-control"></input>
+                <span class="input-group-addon" id="basic-addon2">€/h</span>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <label for="prix_horaire_2">Prix 2ème heure :</label>
+            <div class="input-group">
+                <input
+                type="number"
+                name="prix_horaire_2"
+                ng-model="price_hour_2"
                 class="form-control"></input>
                 <span class="input-group-addon" id="basic-addon2">€/h</span>
             </div>
@@ -151,7 +163,8 @@ angular.module('myApp.AppControllers', [])
             $scope.clients = clientsInStore || {};
 
             $scope.new_client = null;
-            $scope.price_hour = 4;
+            $scope.price_hour_1 = 4;
+            $scope.price_hour_2 = 3;
 
             // Init / Reset new client
             $scope.init_new_client = function()
@@ -196,7 +209,13 @@ angular.module('myApp.AppControllers', [])
                 return moment.utc(moment(new Date()).diff(moment(start))).format("HH:mm");
             };
             $scope.timeprice = function(start){
-                return Math.round(moment(new Date()).diff(moment(start), 'hours', true) * $scope.price_hour * 100) / 100;
+                
+                var price = $scope.price_hour_1;
+                var hours = moment(new Date()).diff(moment(start), 'hours');
+                console.log('hours', hours);
+                price += hours * $scope.price_hour_2;
+                return price;
+                //return Math.round(moment(new Date()).diff(moment(start), 'hours', true) * $scope.price_hour * 100) / 100;
             };
 
             // refresh view every 5 seconds
